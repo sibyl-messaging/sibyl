@@ -1,0 +1,38 @@
+{
+  "name": "@sibyl/relay",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build:protocol": "tsc -p ../../packages/protocol/tsconfig.json",
+    "build": "npm run build:protocol && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run --passWithNoTests",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.0",
+    "@sibyl/protocol": "file:../../packages/protocol",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.11.0",
+    "ioredis": "^5.4.2",
+    "jose": "^6.0.8",
+    "pg": "^8.13.3",
+    "tweetnacl": "^1.0.3",
+    "ws": "^8.21.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.11.11",
+    "@types/ws": "^8.5.14",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

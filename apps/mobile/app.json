@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Sibyl",
+    "slug": "sibyl",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.sibyl.ghost"
+    },
+    "android": {
+      "package": "ai.sibyl.ghost"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Sibyl to scan a borrowed phone's public helper QR code."
+        }
+      ]
+    ]
+  }
+}

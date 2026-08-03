@@ -1,0 +1,23 @@
+{
+  "name": "sibyl",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "apps/helper-web",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:protocol": "npm run --workspace @sibyl/protocol build",
+    "build:relay": "npm run --workspace @sibyl/relay build",
+    "build:helper": "npm run --workspace @sibyl/helper-web build",
+    "build": "npm run build:protocol && npm run build:relay && npm run build:helper",
+    "test": "npm run build:protocol && npm run --workspace @sibyl/protocol test && npm run --workspace @sibyl/relay test && npm run --workspace @sibyl/helper-web test",
+    "lint": "npm run --workspace @sibyl/protocol lint && npm run --workspace @sibyl/relay lint && npm run --workspace @sibyl/helper-web lint",
+    "typecheck": "npm run build:protocol && npm run --workspace @sibyl/protocol typecheck && npm run --workspace @sibyl/relay typecheck && npm run --workspace @sibyl/helper-web typecheck"
+  }
+}

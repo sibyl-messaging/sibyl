@@ -1,0 +1,29 @@
+{
+  "name": "@sibyl/helper-web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@hpke/core": "^1.9.0",
+    "@hpke/dhkem-x25519": "^1.8.0",
+    "@sibyl/protocol": "0.1.0",
+    "qr-scanner": "^1.4.2",
+    "qrcode": "^1.5.4",
+    "tweetnacl": "^1.0.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "typescript": "^5.8.2",
+    "vite": "^7.3.1",
+    "vitest": "^3.2.4"
+  }
+}

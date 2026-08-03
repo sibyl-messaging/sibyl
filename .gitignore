@@ -1,0 +1,27 @@
+node_modules
+.DS_Store
+dist
+build
+coverage
+*.log
+.env
+.env.*
+!.env.example
+!**/.env.example
+.vscode
+.idea
+.tmp
+.vercel
+# Local agent, browser, and editor artifacts
+.agents/
+.playwright-cli/
+skills-lock.json
+
+# Generated or temporary working files
+output/
+tmp/
+*.tsbuildinfo
+**/.expo/
+
+# Internal product-design working memory
+docs/uiux/

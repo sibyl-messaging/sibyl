@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Sibyl Punch Card Demo + Trace Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <main class="app">
+      <header class="top">
+        <div>
+          <h1>Punch Card Demo</h1>
+          <p>Phone-browser demo of the Ghost Sheet concept. No login, no backend.</p>
+        </div>
+      </header>
+
+      <section class="card explain">
+        <h2>How This Works (Plain English)</h2>
+        <p>
+          This demo splits reading and typing into two visual layers: what your screen
+          shows (mostly random noise), and what your paper sheet reveals (the signal).
+          Your paper acts like a physical key.
+        </p>
+
+        <h3>What You Do</h3>
+        <ol>
+          <li>
+            <strong>Write a message</strong> at the top (example: <code>HELLO.</code>).
+          </li>
+          <li>
+            <strong>Open 1) Make Mask</strong>, place blank paper on your phone, and
+            build a negative mask:
+            <code>labeled cells = leave blank white</code>,
+            <code>unlabeled cells = fill dark black</code>.
+          </li>
+          <li>
+            <strong>Open 2) Read</strong>, place that mask back on screen, then
+            align it with the arrow controls:
+            <code>Center first</code>, then tap arrows one step at a time until letters
+            become clear through white windows. Use <em>Strobe</em> only to help your eyes
+            catch alignment.
+          </li>
+          <li>
+            <strong>Open 3) Type</strong>, find a clear letter window on your paper,
+            read the 2-digit number under that window, and type that number on the keypad.
+          </li>
+        </ol>
+
+        <h3>What The App Is Doing Behind The Scenes</h3>
+        <ul>
+          <li>
+            It turns your message into a list of grid positions (hole IDs), not readable
+            text.
+          </li>
+          <li>
+            In the read view, it paints a black/white noise grid, but keeps specific
+            positions bright to carry signal.
+          </li>
+          <li>
+            In the type view, it assigns random <code>00-99</code> codes to each active
+            hole.
+          </li>
+          <li>
+            After every 2-digit entry, it reshuffles the mapping so old numbers become
+            useless.
+          </li>
+        </ul>
+
+        <p class="note">
+          This page is a concept demo for UX/physics testing. It is not the full secure
+          mobile app flow.
+        </p>
+      </section>
+
+      <section class="card">
+        <label for="messageInput">Demo message (`A-Z`, space, period)</label>
+        <div class="row">
+          <input id="messageInput" maxlength="280" value="HELLO." />
+          <button id="refreshNoise" class="btn secondary">Refresh Noise</button>
+        </div>
+        <div class="meta">
+          <span id="normalizedText"></span>
+          <span id="tokenCount"></span>
+        </div>
+      </section>
+
+      <section class="tabs">
+        <button class="tab active" data-tab="sheet">1) Make Mask</button>
+        <button class="tab" data-tab="read">2) Read</button>
+        <button class="tab" data-tab="type">3) Type</button>
+        <button class="tab" data-tab="trace">4) Trace Test</button>
+      </section>
+
+      <section id="panel-sheet" class="panel card active">
+        <h2>Make Negative Mask Sheet</h2>
+        <p>
+          Rule: <strong>all unlabeled cells must be dark black</strong>.
+          <strong>all labeled cells must stay blank white</strong> (no fill).
+          Light passes through white cells and gets blocked by dark cells.
+        </p>
+        <p class="mini-note">
+          Trace the <strong>TOP EDGE</strong> strip shown below onto your paper.
+          Later, place that traced edge against the <strong>top of your phone</strong>
+          again so the mask is not flipped or rotated.
+        </p>
+        <div class="row lock-row">
+          <button id="maskLockBtn" class="btn">Lock Mask Mode</button>
+          <span id="maskLockStatus" class="meta mono">Screen lock: OFF</span>
+        </div>
+        <p class="mini-note">
+          Lock mode prevents scrolling/pinch movement while you fill the mask.
+        </p>
+        <div class="sheet-top-guide" aria-hidden="true">
+          <span>TRACE THIS TOP EDGE</span>
+        </div>
+        <div id="sheetGrid" class="sheet-grid"></div>
+      </section>
+
+      <section id="panel-read" class="panel card">
+        <h2>Read Through Overlay</h2>
+        <p>
+          Exact flow: remove paper after Step 1, open this tab, then place paper back
+          with the traced <strong>TOP EDGE</strong> against the top of the phone.
+        </p>
+        <ol class="read-steps">
+          <li>Tap <strong>Center</strong> first.</li>
+          <li>
+            Tap arrow buttons slowly until letters sharpen in the white windows.
+          </li>
+          <li>
+            If it still looks noisy, toggle <strong>Strobe</strong>, then continue
+            nudging with arrows.
+          </li>
+          <li>
+            Success signal: you can read stable letters. Failure signal: only random
+            speckle.
+          </li>
+        </ol>
+        <div class="read-stage-wrap">
+          <div id="readStage" class="read-stage"></div>
+        </div>
+
+        <div class="align-controls">
+          <button id="upBtn" class="btn">Up</button>
+          <div>
+            <button id="leftBtn" class="btn">Left</button>
+            <button id="centerBtn" class="btn secondary">Center</button>
+            <button id="rightBtn" class="btn">Right</button>
+          </div>
+          <button id="downBtn" class="btn">Down</button>
+        </div>
+
+        <div class="row">
+          <button id="strobeBtn" class="btn secondary">Enable Strobe</button>
+          <div class="meta mono" id="offsetText"></div>
+        </div>
+      </section>
+
+      <section id="panel-type" class="panel card">
+        <h2>Blind Input</h2>
+        <p>
+          Look at your mask, find the glyph window, then type the 2-digit code
+          currently under it.
+        </p>
+
+        <div class="meta mono">
+          <span id="pendingCode">Pending: --</span>
+          <span id="decodedText">Decoded: (none)</span>
+        </div>
+
+        <div id="numberGrid" class="number-grid"></div>
+
+        <div id="digitPad" class="digit-pad"></div>
+
+        <div class="row">
+          <button id="shuffleBtn" class="btn secondary">Manual Shuffle</button>
+          <button id="clearBtn" class="btn danger">Clear Decoded</button>
+        </div>
+      </section>
+
+      <section id="panel-trace" class="panel card">
+        <h2>Trace Test</h2>
+        <p>
+          This mode is a best-effort phone tracing surface: static image, fullscreen
+          request, orientation lock request, wake lock request, no page scrolling,
+          and a touch shield over the page.
+        </p>
+        <ol class="read-steps">
+          <li>
+            Use any paper. Fold one edge over the <strong>top of your phone</strong>
+            like a hinge, then trace the on-screen <strong>TOP EDGE</strong> guide.
+          </li>
+          <li>Choose <strong>Public</strong>, <strong>Share A</strong>, or <strong>Share B</strong>.</li>
+          <li>Tap <strong>Start Trace Mode</strong>, then stop touching the phone.</li>
+          <li>Trace dots or short slits only. Do not try to freehand long lines.</li>
+        </ol>
+
+        <div class="trace-picker">
+          <button class="btn trace-mode-btn active" data-trace-mode="public">
+            Public
+          </button>
+          <button class="btn secondary trace-mode-btn" data-trace-mode="share-a">
+            Share A
+          </button>
+          <button class="btn secondary trace-mode-btn" data-trace-mode="share-b">
+            Share B
+          </button>
+          <button class="btn secondary trace-mode-btn" data-trace-mode="combined">
+            Combined
+          </button>
+        </div>
+
+        <div class="meta mono trace-meta">
+          <span id="traceModeLabel">Pattern: Public frame</span>
+          <span id="traceFeatureStatus">Features: checking...</span>
+        </div>
+
+        <div class="trace-preview-shell">
+          <div id="tracePreview" class="trace-preview"></div>
+        </div>
+
+        <div class="row trace-actions">
+          <button id="traceStartBtn" class="btn">Start Trace Mode</button>
+          <button id="traceRefreshBtn" class="btn secondary">Shuffle Shares</button>
+        </div>
+
+        <p class="mini-note">
+          Exit trace mode by holding the bottom-right corner chip for 1.2 seconds
+          after you lift the paper.
+        </p>
+      </section>
+    </main>
+
+    <button id="unlockFab" class="unlock-fab" type="button">Unlock</button>
+
+    <section id="traceOverlay" class="trace-overlay" aria-hidden="true">
+      <div class="trace-overlay__hud">
+        <span id="traceLiveLabel" class="mono">Trace mode</span>
+        <span id="traceLiveStatus" class="mono">Best effort freeze</span>
+      </div>
+      <div id="traceStage" class="trace-stage"></div>
+      <button id="traceExitHotspot" class="trace-exit" type="button">
+        Hold to exit
+      </button>
+    </section>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
