@@ -1,6 +1,6 @@
 # Security policy
 
-Sibyl is an experimental, unaudited security research project. The repository is public so its claims can be challenged; publication is not proof that the design is secure.
+Sibyl is an experimental, unaudited security research project. Its source is intended to be examined and challenged; publication is not proof that the design is secure.
 
 ## Supported versions
 
@@ -14,7 +14,7 @@ Sibyl is an experimental, unaudited security research project. The repository is
 
 Do not publish an exploitable vulnerability, real credential, private key, paper stamp, or readable message in a public issue.
 
-Use **Report a vulnerability** in this repository's GitHub Security tab. If private vulnerability reporting is not available, open a public issue containing no sensitive details and ask the maintainers to establish a private channel.
+Use **Report a vulnerability** in this repository's GitHub Security tab when that option is available. Otherwise, open an issue containing no sensitive details and ask the maintainers to establish a private channel.
 
 Include:
 
