@@ -12,6 +12,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "npm run build:protocol",
     "build:protocol": "npm run --workspace @sibyl/protocol build",
     "build:relay": "npm run --workspace @sibyl/relay build",
     "build:helper": "npm run --workspace @sibyl/helper-web build",
